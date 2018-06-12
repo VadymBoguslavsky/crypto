@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Petrushchenko/origin-for-FE.git"
+    "url": "git+https://github.com/Petrushchenko/cryptokitties.git"
   },
   "author": "Petrushchenko",
   "license": "ISC",
