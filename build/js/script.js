@@ -1,43 +1,71 @@
-'use strict'
-
-window.onload = function () {
-	
-	var imagesList = getElem('.gallery__item', 'img');
-
-	bgColor(imagesList);
-
+function createCats(param) {
+	var cats = document.querySelector("#templateCat")
+	var main = document.querySelector(".gallery__items")
+	var newCat = cats.content.cloneNode(true);
+	newCat.querySelector('.name__cat').textContent = param.name;
+	newCat.querySelector('.kitty__price').textContent = param.price;
+	newCat.querySelector('.kitty__image').removeAttribute("src");
+	newCat.querySelector('.kitty__image').setAttribute("src", param.img_url);
+	newCat.querySelector('.kitty__category').textContent = param.category;
+	main.appendChild(newCat)
 }
-
-function getElem (selector1, selector2) {
-	var itemsList = document.querySelectorAll(selector1);
-	var res = [];
-	for (var i = 0; i < itemsList.length; i++) {
-		var a = itemsList[i].querySelector(selector2);
-		res.push(a);	
+var result = []
+var arr = []
+function ei(){
+	for(var m=0;m<result.length;m++){
+	result[m]
 	}
-	return res;
 }
 
-function bgColor (ar){
-	var color = ['#fde9e4', ' #fae1ca', '#faeefa', '#dfdffa', '#d3e8ff'];
-	color.forEach(function(item, j){
+console.log(result)
+function unique() {
+	nextInput:
+	for (var i = 0; i < arr.length; i++) {
+		var str = arr[i];
+		for (var j = 0; j < result.length; j++) {
+			if (result[j] == str) continue nextInput;
+		}
+		result.push(str);
+	}
+	return result
+}
 
-		var array = enumeration(ar, 5, j);
-		array.forEach(function (item) {
-			item.style.backgroundColor = color[j];
-		});
-	
+fetch('https://ma-cats-api.herokuapp.com/api/cats')
+	.then(
+		function (response) {
+			response.json().then(function (data) {
+				delete data.info;
+				for (var key in data) {
+					for (var i in data[key]) {
+						createCats(data[key][i]);
+						arr.push(data[key][i].category);
+						unique();
+					}
+				}
+				ei();
+			});
+		}
+	)
+	.catch(function (err) {
+		console.log('Fetch Error :-S', err);
 	});
-	
-};
 
-function enumeration (ar, n, j) {
-	var res =[];
-	for (var i = 0; i < ar.length/n; i++) {
+	var disableButton = false;
+	var button = document.querySelector(".request");
+	button.addEventListener("click", function(){
+		if (disableButton) return;
+		disableButton = true;
+		fetch('https://ma-cats-api.herokuapp.com/api/cats/?page=2')
+		.then(
+			function (response) {
+				response.json().then(function (data) {
+					delete data.info;
+					disableButton = false;
+				});
+			}
+		)
+		.catch(function (err) {
+			console.log('Fetch Error :-S', err);
+		});
+	})
 
-		if (ar[j + i*n] !== undefined) {
-			res.push(ar[j + i*n]);
-		};
-	}
-	return (res);
-};
